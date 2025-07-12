@@ -1,0 +1,42 @@
+.register-card {
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    padding: 2rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+mat-form-field {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+.register-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+button[mat-raised-button] {
+    width: 100%;
+    padding: 0.5rem;
+}
+
+.login-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding: 0;
+  font-size: 0.9rem;
+
+  a {
+    margin-left: 0.5rem;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
