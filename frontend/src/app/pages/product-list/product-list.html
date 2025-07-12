@@ -1,0 +1,51 @@
+<!-- product-list.component.html -->
+<div class="toolbar">
+  <mat-form-field appearance="outline">
+    <input matInput placeholder="Search" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange($event)">
+    <button mat-icon-button matSuffix *ngIf="searchTerm" (click)="clearSearch()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-select [(value)]="sort" (selectionChange)="changeSort($event.value)">
+      <mat-option value="name,asc">Name: A → Z</mat-option>
+      <mat-option value="name,desc">Name: Z → A</mat-option>
+      <mat-option value="price,asc">Price: Low → High</mat-option>
+      <mat-option value="price,desc">Price: High → Low</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-button-toggle-group [(value)]="isGridView" (change)="changeView()">
+    <mat-button-toggle [value]="true">
+      <mat-icon>grid_view</mat-icon>
+    </mat-button-toggle>
+    <mat-button-toggle [value]="false">
+      <mat-icon>list</mat-icon>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+<div *ngIf="isLoading" class="loading">Loading products...</div>
+<div *ngIf="!isLoading && products.length === 0" class="empty">No products found.</div>
+
+<div *ngIf="!isLoading && products.length > 0" class="product-list" [ngClass]="{ 'grid': isGridView, 'list': !isGridView }">
+  <mat-card *ngFor="let product of products" class="product-card">
+    <img mat-card-image [src]="product.images[0]" alt="{{ product.name }}">
+    <mat-card-title>{{ product.name }}</mat-card-title>
+    <mat-card-subtitle>{{ product.price | currency }}</mat-card-subtitle>
+    <mat-card-content>
+      <p>{{ product.shortDescription }}</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-stroked-button color="primary">Add to Cart</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<mat-paginator [length]="totalItems"
+               [pageSize]="size"
+               [pageSizeOptions]="sizes"
+               [pageIndex]="page"
+               (page)="onPageChange($event)">
+</mat-paginator>

@@ -5,7 +5,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule, AbstractControl } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { UserService } from '../../services/user-service';
 
 @Component({
   selector: 'app-login',
@@ -24,8 +25,9 @@ import { RouterLink } from '@angular/router';
 })
 export class Login {
   loginForm: FormGroup;
+  loginError: string = '';
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private userService: UserService, private router: Router) {
     this.loginForm = this.fb.group({
       email: ['', [
         Validators.required,
@@ -62,7 +64,18 @@ export class Login {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      console.log('Form submitted:', this.loginForm.value);
+      this.loginError = '';
+      const { email, password } = this.loginForm.value;
+
+      this.userService.login(email, password).subscribe({
+        next: (response) => {
+          localStorage.setItem('jwt', response.jwt);
+          this.router.navigate(['/products']);
+        },
+        error: (err) => {
+          this.loginError = err.error?.message || 'Login failed. Please try again.';
+        }
+      });
     }
   }
 }

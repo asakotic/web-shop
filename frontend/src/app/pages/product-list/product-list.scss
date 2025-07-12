@@ -1,0 +1,89 @@
+.toolbar {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 1rem;
+}
+
+.loading,
+.empty {
+  text-align: center;
+  font-style: italic;
+  margin-top: 2rem;
+  padding: 0 1rem;
+}
+
+.product-list {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0 1rem;
+
+  &.grid {
+    justify-content: flex-start;
+
+    .product-card {
+      width: 180px;
+      padding: 0.5rem;
+    }
+  }
+
+  &.list {
+    flex-direction: column;
+    padding: 0.5rem 1rem;
+
+    .product-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      width: 100%;
+      padding: 0.5rem;
+
+      img {
+        width: 80px !important;
+        height: 80px !important;
+        object-fit: cover;
+      }
+    }
+  }
+}
+
+.product-card {
+  padding: 0.5rem;
+  
+  img {
+    width: 120px !important;
+    height: 120px !important;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  mat-card-title,
+  mat-card-subtitle {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  mat-card-content {
+    font-size: 0.9rem;
+    color: #555;
+    height: 3rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+mat-paginator {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  padding: 0 1rem;
+}

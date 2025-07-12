@@ -5,7 +5,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink} from '@angular/router';
+import { Router, RouterLink} from '@angular/router';
+import { UserService } from '../../services/user-service';
 
 @Component({
   selector: 'app-register',
@@ -24,8 +25,9 @@ import { RouterLink} from '@angular/router';
 })
 export class Register {
   registerForm: FormGroup;
+  registerError: string = '';
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private userService: UserService, private router: Router) {
     this.registerForm = this.fb.group({
       email: ['', [
         Validators.required,
@@ -63,7 +65,17 @@ export class Register {
 
   onSubmit() {
     if (this.registerForm.valid) {
-      console.log('Registration form submitted:', this.registerForm.value);
+      this.registerError = '';
+      const { email, password } = this.registerForm.value;
+
+      this.userService.register(email, password).subscribe({
+        next: (response) => {
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          this.registerError = err.error?.message || 'Registration failed. Please try again.';
+        }
+      });
     }
   }
 }
