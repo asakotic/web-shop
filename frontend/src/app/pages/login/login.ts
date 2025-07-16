@@ -70,6 +70,7 @@ export class Login {
       this.userService.login(email, password).subscribe({
         next: (response) => {
           localStorage.setItem('jwt', response.jwt);
+          this.userService.setLoginStatus(true);
           this.router.navigate(['/products']);
         },
         error: (err) => {

@@ -8,6 +8,7 @@ import { PaginatedResponse, Product } from '../models/product';
 })
 export class ProductService {
   private apiUrl = 'http://localhost:8080/api/products';
+  private apiCartUrl = 'http://localhost:8080/api/cart';
 
   constructor(private http: HttpClient) { }
 
@@ -34,6 +35,13 @@ getProducts(search: string, page: number, size: number, sort: string): Observabl
 
   getProductById(id: string): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/${id}`, {
+      headers: this.getAuthHeader()
+    });
+  }
+
+  addToCart(productId: string, quantity: number): Observable<any> {
+    const body = { productId, quantity };
+    return this.http.post(`${this.apiCartUrl}/add`, body, {
       headers: this.getAuthHeader()
     });
   }

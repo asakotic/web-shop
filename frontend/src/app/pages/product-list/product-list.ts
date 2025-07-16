@@ -12,6 +12,8 @@ import { CommonModule } from '@angular/common';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { RouterModule } from '@angular/router';
+import { NgIf } from '@angular/common';
 
 
 @Component({
@@ -28,6 +30,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatIconModule,
     MatCardModule,
     MatPaginatorModule,
+    RouterModule,
+    NgIf,
   ],
   templateUrl: './product-list.html',
   styleUrls: ['./product-list.scss']
@@ -35,6 +39,7 @@ import { MatSelectModule } from '@angular/material/select';
 export class ProductList implements OnInit {
   products: Product[] = [];
   totalItems = 0;
+  quantities: { [productId: number]: number } = {};
   isLoading = false;
   isGridView = true;
 
@@ -60,7 +65,7 @@ export class ProductList implements OnInit {
 
   loadProducts(): void {
     this.isLoading = true;
-    this.cd.detectChanges(); // RUČNO osvežavanje UI posle promene
+    this.cd.detectChanges();
 
     this.productService.getProducts(this.searchTerm, this.page, this.size, this.sort)
       .subscribe(res => {
@@ -68,10 +73,17 @@ export class ProductList implements OnInit {
           ...product,
           images: product.images.map(img => `http://localhost:8080/${img}`)
         }));
+
+        this.products.forEach(p => {
+          if (!this.quantities[p.id]) {
+            this.quantities[p.id] = 1;
+          }
+        });
+
         this.totalItems = res.totalElements;
 
         this.isLoading = false;
-        this.cd.detectChanges(); // RUČNO osvežavanje UI posle promene
+        this.cd.detectChanges();
       });
   }
 
@@ -103,4 +115,24 @@ export class ProductList implements OnInit {
     this.size = event.pageSize;
     this.loadProducts();
   }
+
+  addToCart(product: Product): void {
+  const quantity = this.quantities[product.id] || 1;
+
+  this.productService.addToCart(product.id.toString(), quantity).subscribe({
+    next: (response) => {
+      if (response.success) {
+        alert(response.message);
+      } else {
+        alert(response.message);
+      }
+    },
+    error: (err) => {
+      console.error('HTTP error:', err);
+      alert('Network or server error occurred');
+    }
+  });
+}
+
+
 }

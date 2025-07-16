@@ -1,4 +1,3 @@
-<!-- product-list.component.html -->
 <div class="toolbar">
   <mat-form-field appearance="outline">
     <input matInput placeholder="Search" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange($event)">
@@ -29,23 +28,27 @@
 <div *ngIf="isLoading" class="loading">Loading products...</div>
 <div *ngIf="!isLoading && products.length === 0" class="empty">No products found.</div>
 
-<div *ngIf="!isLoading && products.length > 0" class="product-list" [ngClass]="{ 'grid': isGridView, 'list': !isGridView }">
+<div *ngIf="!isLoading && products.length > 0" class="product-list"
+  [ngClass]="{ 'grid': isGridView, 'list': !isGridView }">
   <mat-card *ngFor="let product of products" class="product-card">
-    <img mat-card-image [src]="product.images[0]" alt="{{ product.name }}">
-    <mat-card-title>{{ product.name }}</mat-card-title>
-    <mat-card-subtitle>{{ product.price | currency }}</mat-card-subtitle>
-    <mat-card-content>
-      <p>{{ product.shortDescription }}</p>
-    </mat-card-content>
+    <div class="clickable-area" [routerLink]="['/product', product.id]">
+      <img mat-card-image [src]="product.images[0]" alt="{{ product.name }}">
+      <mat-card-title>{{ product.name }}</mat-card-title>
+      <mat-card-subtitle>{{ product.price | currency }}</mat-card-subtitle>
+      <mat-card-content>
+        <p>{{ product.shortDescription }}</p>
+      </mat-card-content>
+    </div>
     <mat-card-actions>
-      <button mat-stroked-button color="primary">Add to Cart</button>
+      <input type="number" min="1" [value]="quantities[product.id]"
+        (input)="quantities[product.id] = $any($event.target).valueAsNumber || 1" class="quantity-input">
+      <button mat-stroked-button color="primary" (click)="addToCart(product)">
+        Add to Cart
+      </button>
     </mat-card-actions>
   </mat-card>
 </div>
 
-<mat-paginator [length]="totalItems"
-               [pageSize]="size"
-               [pageSizeOptions]="sizes"
-               [pageIndex]="page"
-               (page)="onPageChange($event)">
+<mat-paginator [length]="totalItems" [pageSize]="size" [pageSizeOptions]="sizes" [pageIndex]="page"
+  (page)="onPageChange($event)">
 </mat-paginator>
