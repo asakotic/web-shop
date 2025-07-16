@@ -1,7 +1,10 @@
 package rs.bosch.web_shop.repository;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import rs.bosch.web_shop.model.CartItem;
 import rs.bosch.web_shop.model.Product;
 import rs.bosch.web_shop.model.User;
@@ -13,8 +16,10 @@ public interface CartRepository extends JpaRepository<CartItem, Long> {
 
     List<CartItem> findByUserId(User userId);
 
-    Optional<CartItem> findByUserIdAndProductId(User userId, Product productId);
+    Optional<CartItem> findByUserIdAndProductId(User userId, Long productId);
 
-    void deleteByUserIdAndId(User userId, Long itemId);
+    @Transactional
+    @Modifying
+    int deleteByUserIdAndProduct(User userId, Product product);
 }
 

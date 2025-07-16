@@ -37,7 +37,8 @@ public class Configuration1 {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
-                        .requestMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/images/**").permitAll()  // ← DODAJ OVO
+                        .requestMatchers("/resources/**", "/static/**", "/css/**", "/js/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .requestMatchers("/api/cart/**").hasRole("CLIENT")
                         .anyRequest().authenticated()

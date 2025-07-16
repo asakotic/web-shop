@@ -7,6 +7,8 @@ import rs.bosch.web_shop.model.dto.CartItemReq;
 import rs.bosch.web_shop.model.dto.UpdateQuantityReq;
 import rs.bosch.web_shop.service.CartService;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/cart")
 @RequiredArgsConstructor
@@ -15,9 +17,24 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> addItemToCart(@RequestBody CartItemReq request, @RequestHeader("Authorization") String authHeader) {
-        cartService.addItem(authHeader, request);
-        return ResponseEntity.ok("Item added to cart.");
+    public ResponseEntity<Map<String, Object>> addItemToCart(
+            @RequestBody CartItemReq request,
+            @RequestHeader("Authorization") String authHeader) {
+
+        try {
+            cartService.addItem(authHeader, request);
+            return ResponseEntity.ok()
+                    .body(Map.of(
+                            "success", true,
+                            "message", "Item added to cart successfully"
+                    ));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of(
+                            "success", false,
+                            "message", e.getMessage()
+                    ));
+        }
     }
 
     @GetMapping
